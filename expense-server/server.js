@@ -1,33 +1,14 @@
-// console.log("Hii, I'm your server");
-
 const express = require('express');
+
+const authRoutes = require('../expense-server/src/routes/authRoutes');
 const app = express();
 
-app.use(express.json());//Middleware
+app.use(express.json());
 
 
-app.use('/register', (req, res) => {
-   const { name, email, password } = req.body;
+app.use('/auth', authRoutes);
 
-   if (!name || !email || !password) {
-      return res.status(400).json({
-         message: 'Name, Email, Password are required'
-      })
-   }
 
-   const newUser = {
-      id: users.length + 1,
-      name: name,
-      email: email,
-      password: password
-   };
-
-   users.push(newUser);
-
-   return res.status(200).json({
-      message: "user registered",
-      user: { id: newUser.id }
-   });
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
 });
-
-app.listen(3000, () => { console.log("Server is running on port 3000") });
