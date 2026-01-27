@@ -1,5 +1,6 @@
 const userDao = require('../dao/userDao');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const authController = {
     login: async (request, response) => {
@@ -15,6 +16,20 @@ const authController = {
 
         const isPasswordMatched = await bcrypt.compare(password, user.password);
         if (user && isPasswordMatched) {
+            const token = jwt.sign({
+                name: user.name,
+                email: user.email,
+                id: user._id
+            }, process.env.JWT_SECRET,
+                { expiresIn: '1h' }
+            );
+
+            response.cookie('jwtToken', token, {
+                httpOnly: true,
+                secure: true,
+                domain: 'localhost',
+                path: '/'
+            });
             return response.status(200).json({
                 message: 'User authenticated',
                 user: user
