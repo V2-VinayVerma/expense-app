@@ -1,0 +1,11 @@
+const express = require('express');
+
+const authMiddleware = require('../middlewares/authMiddleware');
+const groupController = require('../controllers/groupController');
+const router = express.Router();
+
+router.use(authMiddleware.protect);
+router.post('/create', groupController.create);
+
+
+module.exports = router;
